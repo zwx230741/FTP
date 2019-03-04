@@ -378,6 +378,7 @@ void ftp_stor(Command *cmd, State *state)
     int pipefd[2];
     int res = 1;
     const int buff_size = 8192;
+	char data[8192] = {0};
 
     FILE *fp = fopen(cmd->arg,"w");
 
@@ -402,10 +403,25 @@ void ftp_stor(Command *cmd, State *state)
          * The splice() system call first appeared in Linux 2.6.17.
          */
 
-        while ((res = splice(connection, 0, pipefd[1], NULL, buff_size, SPLICE_F_MORE | SPLICE_F_MOVE))>0){
+#if 0
+		while ((res = splice(connection, 0, pipefd[1], NULL, buff_size, SPLICE_F_MORE | SPLICE_F_MOVE))>0){
           splice(pipefd[0], NULL, fd, 0, buff_size, SPLICE_F_MORE | SPLICE_F_MOVE);
         }
+#else
+		while(1)
+		{
+			int numBytes = read(connection, data, sizeof(data) - 1);
 
+			if(numBytes > 0)
+			{
+				fwrite(data, 1, numBytes, fp);
+			}
+			else
+			{
+				break;
+			}
+		}
+#endif
         /* TODO: signal with ABOR command to exit */
 
         /* Internal error */

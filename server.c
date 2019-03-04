@@ -205,7 +205,7 @@ void my_wait(int signum)
 
 main()
 {
-  server(8021);
+  server(2121);
   return 0;
 
 }
