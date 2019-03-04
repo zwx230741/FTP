@@ -203,9 +203,9 @@ void my_wait(int signum)
   wait(&status);
 }
 
-main()
+int main()
 {
   server(2121);
   return 0;
-
 }
+

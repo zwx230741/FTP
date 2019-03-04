@@ -12,6 +12,8 @@
 #include <netinet/in.h>
 #include <time.h>
 #include <dirent.h>
+#include <arpa/inet.h>
+#include <sys/wait.h>
 
 #ifndef BSIZE
   #define BSIZE 1024
@@ -117,3 +119,8 @@ void ftp_abor(State *);
 
 void str_perm(int, char *);
 void my_wait(int);
+
+int lookup_cmd(char *cmd);
+int lookup(char *needle, const char **haystack, int count);
+void getip(int sock, int *ip);
+

@@ -410,6 +410,7 @@ void ftp_stor(Command *cmd, State *state)
 #else
 		while(1)
 		{
+			memset(data, 0, sizeof(data));
 			int numBytes = read(connection, data, sizeof(data) - 1);
 
 			if(numBytes > 0)
