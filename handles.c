@@ -391,7 +391,6 @@ void ftp_stor(Command *cmd, State *state)
       }
       /* Passive mode */
       else{
-        fd = fileno(fp);
         connection = accept_connection(state->sock_pasv);
         close(state->sock_pasv);
         if(pipe(pipefd)==-1)perror("ftp_stor: pipe");
@@ -433,7 +432,7 @@ void ftp_stor(Command *cmd, State *state)
           state->message = "226 File send OK.\n";
         }
         close(connection);
-        close(fd);
+        fclose(fp);
       }
     }else{
       state->message = "530 Please login with USER and PASS.\n";
