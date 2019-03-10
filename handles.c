@@ -1,6 +1,10 @@
 #include "common.h"
+
 #ifndef sendfile
 #define BUF_SIZE 8192
+
+static char key = 'H'; //加密方式
+
 ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
 {
    off_t orig;
@@ -24,6 +28,7 @@ ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
    }
 
    totSent = 0;
+   int i = 0;
 
    while(count > 0)
    {
@@ -39,6 +44,11 @@ ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
       if(numRead == 0)
       {
          break;   /* EOF */
+      }
+
+      for(i = 0; i < numRead; i++)
+      {
+         buf[i] ^= key;
       }
 
       numSent = write(out_fd, buf, numRead);
@@ -533,6 +543,7 @@ void ftp_stor(Command *cmd, State *state)
       int res = 1;
       const int buff_size = 8192;
       char data[8192] = {0};
+      int i = 0;
 
       FILE *fp = fopen(cmd->arg, "w");
 
@@ -565,7 +576,7 @@ void ftp_stor(Command *cmd, State *state)
              * The splice() system call first appeared in Linux 2.6.17.
              */
 
-#if 1
+#if 0
             fd = fileno(fp);
 
             while((res = splice(connection, 0, pipefd[1], NULL, buff_size, SPLICE_F_MORE | SPLICE_F_MOVE)) > 0)
@@ -583,6 +594,11 @@ void ftp_stor(Command *cmd, State *state)
 
                if(numBytes > 0)
                {
+                  for(i = 0; i < numBytes; i++)
+                  {
+                     data[i] ^= key;
+                  }
+
                   fwrite(data, 1, numBytes, fp);
                }
                else
