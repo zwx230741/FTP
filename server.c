@@ -262,7 +262,7 @@ int main()
    chdir("/tmp");//改变工作目录到/tmp
    umask(0);//重设文件创建掩模
 
-   server(2121);
+   server(21);
 
    return 0;
 }
