@@ -259,7 +259,7 @@ int main()
       exit(1);  //fork失败，退出
    }
 
-   chdir("/tmp");//改变工作目录到/tmp
+   chdir("/tmp/ftp");//改变工作目录到/tmp/ftp
    umask(0);//重设文件创建掩模
 
    server(21);
